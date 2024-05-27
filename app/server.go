@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	 Uncomment this block to pass the first stage
+	// Uncomment this block to pass the first stage
 	 "net"
 	 "os"
 )
@@ -11,7 +11,7 @@ func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
 	fmt.Println("Logs from your program will appear here!")
 
-	 //Uncomment this block to pass the first stage
+	 // Uncomment this block to pass the first stage
 	
 	 l, err := net.Listen("tcp", "0.0.0.0:4221")
 	 if err != nil {
