@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"net"
 	"os"
     "strings"
@@ -9,18 +9,18 @@ import (
 
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	log.Println("Logs from your program will appear here!")
+	fmt.Println("Logs from your program will appear here!")
 
     // Creates TCP server listening on port 4221	
 	 l, err := net.Listen("tcp", "0.0.0.0:4221")
 	 if err != nil {
-	 	log.Println("Failed to bind to port 4221")
+	 	fmt.Println("Failed to bind to port 4221")
 	 	os.Exit(1)
 	 }
 	
      conn, err := l.Accept()
 	 if err != nil {
-	 	log.Println("Error accepting connection: ", err.Error())
+	 	fmt.Println("Error accepting connection: ", err.Error())
 	 	os.Exit(1)
 	 }
 
@@ -42,7 +42,7 @@ func handleConnection(conn net.Conn) {
     // method := request[0]
     path := request[1]
     // version := request[2]
-    log.Printf("Path is %s:\n", path)
+    fmt.Printf("Path is %s:\n", path)
 
     var response string = "HTTP/1.1 404 Not Found\r\n\r\n"
     if path == "/" {
@@ -51,7 +51,7 @@ func handleConnection(conn net.Conn) {
 
     _, err = conn.Write([]byte(response))
     if err != nil {
-        log.Println("Failed to write response")
+        fmt.Println("Failed to write response")
         os.Exit(1)
     }
 
