@@ -24,7 +24,7 @@ func main() {
 	 	os.Exit(1)
 	 }
 
-    go handleConnection(conn)
+    handleConnection(conn)
  }
 
 func handleConnection(conn net.Conn) {
@@ -49,10 +49,6 @@ func handleConnection(conn net.Conn) {
         response = "HTTP/1.1 200 OK\r\n\r\n"
     }
 
-    _, err = conn.Write([]byte(response))
-    if err != nil {
-        fmt.Println("Error writing response: ", err.Error())
-        os.Exit(1)
-    }
+    conn.Write([]byte(response))
 
 }
