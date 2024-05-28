@@ -13,7 +13,8 @@ func main() {
 
 	 // Uncomment this block to pass the first stage
 	 l, err := net.Listen("tcp", "0.0.0.0:4221")
-	 if err != nil {
+	 defer l.Close()
+     if err != nil {
 	 	fmt.Println("Failed to bind to port 4221")
 	 	os.Exit(1)
 	 }
@@ -31,7 +32,7 @@ func handleConnection(conn net.Conn) {
     //frees memory by closing connection at end of function
     defer conn.Close()
     
-    buf := make([]byte, 1024)
+    buf := make([]byte, 0, 1024)
     conn.Read(buf)
 
     bufString := strings.Split(string(buf), "\n")
@@ -47,6 +48,13 @@ func handleConnection(conn net.Conn) {
     var response string = "HTTP/1.1 404 Not Found\r\n\r\n"
     if path == "/" {
         response = "HTTP/1.1 200 OK\r\n\r\n"
+    }
+    if strings.Contains(path, "echo") {
+        var echostring := string.Split(path, "/")
+        response = "HTTP/1.1 200 OK\r\n"
+        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(path[1]))
+        response += path[1]
+        
     }
 
     conn.Write([]byte(response))
