@@ -32,7 +32,7 @@ func handleConnection(conn net.Conn) {
     //frees memory by closing connection at end of function
     defer conn.Close()
     
-    buf := make([]byte, 1024)
+    buf := make([]byte, 0, 1024)
     conn.Read(buf)
 
     bufString := strings.Split(string(buf), "\n")
