@@ -24,15 +24,14 @@ func main() {
 	 	fmt.Println("Error accepting connection: ", err.Error())
 	 	os.Exit(1)
 	 }
-    fmt.Println("Making sure this part works")
     handleConnection(conn)
-    fmt.Println("Making sure this part works, too")
  }
 
 func handleConnection(conn net.Conn) {
     //frees memory by closing connection at end of function
     defer conn.Close()
     
+    fmt.Println("Making sure this part works, too")
     buf := make([]byte, 0, 1024)
     conn.Read(buf)
 
