@@ -95,7 +95,7 @@ func handleConnection(conn net.Conn) {
 	    }
 		response = "HTTP/1.1 201 Created\r\n"
         response += fmt.Sprintf("Content-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n", len(bufString[len(bufString)-1]))
-        response += bufString[len(bufString)-1])
+        response += bufString[len(bufString)-1]
 
     default:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
