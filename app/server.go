@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
     "strings"
+    "bytes"
 )
 
 func main() {
@@ -36,6 +37,7 @@ func handleConnection(conn net.Conn) {
     
     buf := make([]byte, 1024)
     conn.Read(buf)
+    bytes.Trim(buf, "\x00")
 
     bufString := strings.Split(string(buf), "\n")
     request := strings.Split(bufString[0], " ")
