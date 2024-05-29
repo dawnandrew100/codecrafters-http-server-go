@@ -7,6 +7,14 @@ import (
     "strings"
     "bytes"
 )
+// I'm going to refactor this because I can forsee this becoming complicated
+
+const (
+    OK          = "HTTP/1.1 200 OK\r\n"
+	BAD_REQUEST = "HTTP/1.1 400 Bad Request\r\n\r\n"
+	NOT_FOUND   = "HTTP/1.1 404 Not Found\r\n\r\n"
+    CREATED     = "HTTP/1.1 201 Created\r\n"
+)
 
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -31,6 +39,7 @@ func main() {
    }
  }
 
+
 func handleConnection(conn net.Conn) {
     //frees memory by closing connection at end of function
     defer conn.Close()
@@ -52,7 +61,7 @@ func handleConnection(conn net.Conn) {
 
     switch {
     case path == "/":
-        response = "HTTP/1.1 200 OK\r\n\r\n"
+        response = OK + "\r\n"
 
     case strings.Contains(path, "echo"):
         encoding := strings.Split(bufString[2], ":")
@@ -81,7 +90,7 @@ func handleConnection(conn net.Conn) {
         fileName := strings.TrimPrefix(path, "/files/")
         data, err := os.ReadFile(directory + fileName)
 				if err != nil {
-                    response = "HTTP/1.1 404 Not Found\r\n\r\n"
+                    response = NOT_FOUND 
 				} else {
                     dataString := string(data)
 					response = "HTTP/1.1 200 OK\r\n"
@@ -94,6 +103,10 @@ func handleConnection(conn net.Conn) {
         fileName := strings.TrimPrefix(path, "/files/")
         filepath := fmt.Sprintf("%s%s", directory, fileName)
 
+        if directory == "" {
+            fmt.Println("Error reading file directory")
+            return BAD_REQUEST
+        }
 	    f, err := os.Create(filepath)
 	    if err != nil {
 		    fmt.Printf("Unable to create file: %s\n", filepath)
@@ -102,12 +115,14 @@ func handleConnection(conn net.Conn) {
 	    if err != nil {
 		    fmt.Println("Unable to write to file")
 	    }
-		response = "HTTP/1.1 201 Created\r\n"
-        response += fmt.Sprintf("Content-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n", len(bufString[len(bufString)-1]))
-        response += bufString[len(bufString)-1]
+        response = responseBuilder(CREATED, "application/octet-stream", len(bufString[len(bufString)-1]), bufString[len(bufString)-1])
 
     default:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
+    }
+
+    func responseBuilder(statusLine string, contentType string, contentLength int, body string) string {
+        return fmt.Sprintf("%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n%s", statusLine, contentType, contentLength, body)
     }
 
     conn.Write([]byte(response))
