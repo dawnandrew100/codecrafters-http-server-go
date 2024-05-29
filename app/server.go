@@ -77,7 +77,7 @@ func handleConnection(conn net.Conn) {
         user_agent := bufString[2]
         user_agent_echo := strings.Split(user_agent, " ")
         // must subtract one becuase length also counts carriage return as character
-        response = responseBuilder(OK, "text/plain", len(user_agent_echo[1])-1), user_agent_echo[1])
+        response = responseBuilder(OK, "text/plain", len(user_agent_echo[1])-1, user_agent_echo[1])
 
     case method == "GET" && strings.Contains(path, "files"):
         directory := os.Args[2]
