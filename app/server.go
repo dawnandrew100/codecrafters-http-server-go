@@ -48,7 +48,9 @@ func main() {
 		if element != "" {
             fmt.Println("Bye")
 			headerSplit := strings.Split(element, ":")
+            fmt.Println("My")
 			headers[headerSplit[0]] = strings.TrimSpace(headerSplit[1])
+            fmt.Println("Boi")
 			continue
 		}
 	}
