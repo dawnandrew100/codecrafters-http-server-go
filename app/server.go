@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	fmt.Println("!Logs from your program will appear here!")
+	fmt.Println("Logs from your program will appear here!")
 
 	 // Uncomment this block to pass the first stage
 	 l, err := net.Listen("tcp", "0.0.0.0:4221")
@@ -44,25 +44,27 @@ func handleConnection(conn net.Conn) {
     // version := request[2]
     fmt.Printf("Path is %s:\n", path)
 
-    var response string = "HTTP/1.1 404 Not Found\r\n\r\n"
-    if path == "/" {
-        response = "HTTP/1.1 200 OK\r\n\r\n"
-    }
+    var response string
 
-    if strings.Contains(path, "echo") {
+    switch {
+    case path == "/":
+        response = "HTTP/1.1 200 OK\r\n\r\n"
+
+    case strings.Contains(path, "echo"):
         echostring := strings.Split(path, "/")
         response = "HTTP/1.1 200 OK\r\n"
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2]))
         response += echostring[2]
 
-    }
-
-    if path == "/user-agent" {
+    case path == "/user-agent":
         user_agent_echo := strings.Split(user_agent, " ")
         response = "HTTP/1.1 200 OK\r\n"
         // must subtract one becuase length also counts carriage return as character
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent_echo[1])-1)
         response +=user_agent_echo[1]
+
+    default:
+        response = "HTTP/1.1 404 Not Found\r\n\r\n"
     }
 
     conn.Write([]byte(response))
