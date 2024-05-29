@@ -30,65 +30,41 @@ func main() {
    }
  }
 
- type Request struct {
-     Method      string
-     Target      string
-     HTTPVersion string
-     Headers     map[string]string
- }
-
- func parseRequest(request []string) *Request {
-    clientrequest := strings.Split(request[0], " ")
-    
-    headers := make(map[string]string)
-	for _, element := range request[1:] {
-		if strings.Contains(element, "\x00") {
-			break
-		}
-		if element != "" {
-            fmt.Println(element)
-			headerSplit := strings.Split(element, ":")
-			headers[headerSplit[0]] = strings.TrimSpace(headerSplit[1])
-			continue
-		}
-	}
-
-    fmt.Println("Hello")	
-    return &Request{
-        Method: clientrequest[0],
-        Target: clientrequest[1],
-        HTTPVersion: clientrequest[2],
-        Headers: headers,
-    }
- }
-
 func handleConnection(conn net.Conn) {
     //frees memory by closing connection at end of function
     defer conn.Close()
     
     buf := make([]byte, 1024)
     conn.Read(buf)
-    bufString := strings.Split(string(buf), "\n")
 
-    request := parseRequest(bufString)
+    bufString := strings.Split(string(buf), "\n")
+    request := strings.Split(bufString[0], " ")
+    //host := bufString[1]
+    user_agent := bufString[2]
+
+    // method := request[0]
+    path := request[1]
+    // version := request[2]
+    fmt.Printf("Path is %s:\n", path)
 
     var response string
 
     switch {
-    case request.Target == "/":
+    case path == "/":
         response = "HTTP/1.1 200 OK\r\n\r\n"
 
-    case strings.Contains(request.Target, "echo"):
-        echostring := strings.Split(request.Target, "/")
+    case strings.Contains(path, "echo"):
+        echostring := strings.Split(path, "/")
         response = "HTTP/1.1 200 OK\r\n"
-        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2])-1)
+        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2]))
         response += echostring[2]
 
-    case request.Target == "/user-agent":
+    case path == "/user-agent":
+        user_agent_echo := strings.Split(user_agent, " ")
         response = "HTTP/1.1 200 OK\r\n"
         // must subtract one becuase length also counts carriage return as character
-        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(request.Headers["User-Agent"]))
-        response += request.Headers["User-Agent"]
+        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent_echo[1])-1)
+        response +=user_agent_echo[1]
 
     default:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
