@@ -35,16 +35,15 @@ func handleConnection(conn net.Conn) {
     conn.Read(buf)
 
     bufString := strings.Split(string(buf), "\n")
-    fmt.Println(bufString[1]) 
     request := strings.Split(bufString[0], " ")
     //host := bufString[1]
     user_agent := bufString[2]
 
-    fmt.Println(user_agent)
     // method := request[0]
     path := request[1]
     // version := request[2]
     fmt.Printf("Path is %s:\n", path)
+    fmt.Printf("User-agent is %s:\n", user_agent)
 
     var response string = "HTTP/1.1 404 Not Found\r\n\r\n"
     if path == "/" {
@@ -63,7 +62,7 @@ func handleConnection(conn net.Conn) {
         user_agent_echo := strings.Split(user_agent, " ")
         response = "HTTP/1.1 200 OK\r\n"
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent_echo[1]))
-        response +=user_agent_echo[10]
+        response +=user_agent_echo[1]
     }
 
     conn.Write([]byte(response))
