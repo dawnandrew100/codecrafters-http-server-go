@@ -42,11 +42,11 @@ func main() {
     
     headers := make(map[string]string)
 	for _, element := range request[1:] {
-        fmt.Println("Bye")
 		if strings.Contains(element, "\x00") {
 			break
 		}
 		if element != "" {
+            fmt.Println("Bye")
 			headerSplit := strings.Split(element, ":")
 			headers[headerSplit[0]] = strings.TrimSpace(headerSplit[1])
 			continue
