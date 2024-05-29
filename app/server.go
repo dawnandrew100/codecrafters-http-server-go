@@ -39,7 +39,7 @@ func main() {
 
  func parseRequest(request []string) *Request {
     clientrequest := strings.Split(request[0], " ")
-	
+    fmt.Println("Hello")	
     headers := make(map[string]string)
 	for _, element := range request[1:] {
 		if strings.Contains(element, "\x00") {
@@ -79,7 +79,7 @@ func handleConnection(conn net.Conn) {
     case strings.Contains(request.Target, "echo"):
         echostring := strings.Split(request.Target, "/")
         response = "HTTP/1.1 200 OK\r\n"
-        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2]))
+        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2])-1)
         response += echostring[2]
 
     case request.Target == "/user-agent":
