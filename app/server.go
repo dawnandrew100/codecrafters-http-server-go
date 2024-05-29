@@ -50,7 +50,7 @@ func handleConnection(conn net.Conn) {
         response = "HTTP/1.1 200 OK\r\n\r\n"
     }
     if strings.Contains(path, "echo") {
-        var echostring := string.Split(path, "/")
+        echostring := string.Split(path, "/")
         response = "HTTP/1.1 200 OK\r\n"
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(path[1]))
         response += path[1]
