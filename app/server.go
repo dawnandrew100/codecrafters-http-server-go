@@ -38,7 +38,6 @@ func handleConnection(conn net.Conn) {
     conn.Read(buf)
 
     bufString := strings.Split(string(buf), "\n")
-    bufByte := []byte(bufString)
     request := strings.Split(bufString[0], " ")
     host := bufString[1]
 
@@ -89,7 +88,7 @@ func handleConnection(conn net.Conn) {
 	    if err != nil {
 		    fmt.Printf("Unable to create file: %s\n", filepath)
 	    }
-	    _, err = f.Write(bufByte[len(bufString)-1])
+	    _, err = f.WriteString(bufString[len(bufString)-1])
 	    if err != nil {
 		    fmt.Println("Unable to write to file")
 	    }
