@@ -6,6 +6,7 @@ import (
 	"os"
     "strings"
     "bytes"
+    "slices"
 )
 
 func main() {
@@ -54,13 +55,13 @@ func handleConnection(conn net.Conn) {
     case path == "/":
         response = "HTTP/1.1 200 OK\r\n\r\n"
 
-    case strings.Contains(path, "echo") && !strings.Contains(bufString[1:], "Accept-Encoding"):
+    case strings.Contains(path, "echo") && !slices.Contains(bufString[1:], "Accept-Encoding"):
         echostring := strings.Split(path, "/")
         response = "HTTP/1.1 200 OK\r\n"
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2]))
         response += echostring[2]
 
-    case strings.Contains(path, "echo") && strings.Contains(bufString[1:], "Accept-Encoding"):
+    case strings.Contains(path, "echo") && slices.Contains(bufString[1:], "Accept-Encoding"):
         encoding := strings.Split(bufString[2], ":")
         echostring := strings.Split(path, "/")
         response = "HTTP/1.1 200 OK\r\n"
