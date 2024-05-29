@@ -30,41 +30,65 @@ func main() {
    }
  }
 
+ type Request struct {
+     Method      string
+     Target      string
+     HTTPVersion string
+     Headers     map[string]string
+ }
+
+ func parseRequest(request []string) *Request {
+    clientrequest := strings.Split(request[0], " ")
+	
+    headers := make(map[string]string)
+	for _, element := range request[1:] {
+		if strings.Contains(element, "\x00") {
+			break
+		}
+		if element != "" {
+			headerSplit := strings.Split(element, ":")
+			headers[headerSplit[0]] = strings.TrimSpace(headerSplit[1])
+			continue
+		}
+	}
+
+    return &Request{
+        Method: request[0],
+        Target: request[1],
+        HTTPVersion: request[2],
+        Headers: headers,
+    }
+ }
+
 func handleConnection(conn net.Conn) {
     //frees memory by closing connection at end of function
     defer conn.Close()
     
     buf := make([]byte, 1024)
     conn.Read(buf)
-
     bufString := strings.Split(string(buf), "\n")
-    request := strings.Split(bufString[0], " ")
-    //host := bufString[1]
-    user_agent := bufString[2]
 
-    // method := request[0]
-    path := request[1]
-    // version := request[2]
-    fmt.Printf("Path is %s:\n", path)
+    parseRequest(bufString)
 
     var response string
 
+    //host := bufString[1]
+    user_agent := bufString[2]
     switch {
-    case path == "/":
+    case Request.Target == "/":
         response = "HTTP/1.1 200 OK\r\n\r\n"
 
-    case strings.Contains(path, "echo"):
-        echostring := strings.Split(path, "/")
+    case strings.Contains(Request.Target, "echo"):
+        echostring := strings.Split(Request.Target, "/")
         response = "HTTP/1.1 200 OK\r\n"
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2]))
         response += echostring[2]
 
-    case path == "/user-agent":
-        user_agent_echo := strings.Split(user_agent, " ")
+    case Request.Target == "/user-agent":
         response = "HTTP/1.1 200 OK\r\n"
         // must subtract one becuase length also counts carriage return as character
-        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent_echo[1])-1)
-        response +=user_agent_echo[1]
+        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(request.Headers["User-Agent"]))
+        response += request.Headers["User-Agent"]
 
     default:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
