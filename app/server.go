@@ -39,13 +39,12 @@ func handleConnection(conn net.Conn) {
 
     bufString := strings.Split(string(buf), "\n")
     request := strings.Split(bufString[0], " ")
-    //host := bufString[1]
-    user_agent := bufString[2]
+    host := bufString[1]
 
-    // method := request[0]
+    method := request[0]
     path := request[1]
-    // version := request[2]
-    fmt.Printf("Path is %s:\n", path)
+    version := request[2]
+    fmt.Printf("Port: %s\nPath: %s\nHTTP version: %s\n", host, path, version)
 
     var response string
 
@@ -60,13 +59,14 @@ func handleConnection(conn net.Conn) {
         response += echostring[2]
 
     case path == "/user-agent":
+        user_agent := bufString[2]
         user_agent_echo := strings.Split(user_agent, " ")
         response = "HTTP/1.1 200 OK\r\n"
         // must subtract one becuase length also counts carriage return as character
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent_echo[1])-1)
         response +=user_agent_echo[1]
 
-    case strings.Contains(path, "files"):
+    case method == GET && strings.Contains(path, "files"):
         directory := os.Args[2]
         fileName := strings.TrimPrefix(path, "/files/")
         data, err := os.ReadFile(directory + fileName)
