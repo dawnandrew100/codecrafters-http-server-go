@@ -68,23 +68,23 @@ func handleConnection(conn net.Conn) {
     conn.Read(buf)
     bufString := strings.Split(string(buf), "\n")
 
-    parseRequest(bufString)
+    request := parseRequest(bufString)
 
     var response string
 
     //host := bufString[1]
     user_agent := bufString[2]
     switch {
-    case Request.Target == "/":
+    case request.Target == "/":
         response = "HTTP/1.1 200 OK\r\n\r\n"
 
-    case strings.Contains(Request.Target, "echo"):
-        echostring := strings.Split(Request.Target, "/")
+    case strings.Contains(request.Target, "echo"):
+        echostring := strings.Split(request.Target, "/")
         response = "HTTP/1.1 200 OK\r\n"
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2]))
         response += echostring[2]
 
-    case Request.Target == "/user-agent":
+    case request.Target == "/user-agent":
         response = "HTTP/1.1 200 OK\r\n"
         // must subtract one becuase length also counts carriage return as character
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(request.Headers["User-Agent"]))
