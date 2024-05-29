@@ -105,7 +105,7 @@ func handleConnection(conn net.Conn) {
 
         if directory == "" {
             fmt.Println("Error reading file directory")
-            return BAD_REQUEST
+            response = BAD_REQUEST
         }
 	    f, err := os.Create(filepath)
 	    if err != nil {
