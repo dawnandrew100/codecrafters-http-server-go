@@ -121,10 +121,10 @@ func handleConnection(conn net.Conn) {
         response = NOT_FOUND
     }
 
-    func responseBuilder(statusLine string, contentType string, contentLength int, body string) string {
-        return fmt.Sprintf("%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n%s", statusLine, contentType, contentLength, body)
-    }
-
     conn.Write([]byte(response))
 
+}
+
+func responseBuilder(statusLine string, contentType string, contentLength int, body string) string {
+    return fmt.Sprintf("%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n%s", statusLine, contentType, contentLength, body)
 }
