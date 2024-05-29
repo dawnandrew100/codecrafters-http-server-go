@@ -88,7 +88,7 @@ func handleConnection(conn net.Conn) {
 	    if err != nil {
 		    fmt.Printf("Unable to create file: %s\n", filepath)
 	    }
-	    _, err = f.Write(bufString[len(bufString)-1])
+	    _, err = f.Write(bufString[len(buf)-1])
 	    if err != nil {
 		    fmt.Println("Unable to write to file")
 	    }
