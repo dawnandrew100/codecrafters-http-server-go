@@ -67,23 +67,17 @@ func handleConnection(conn net.Conn) {
         encoding := strings.Split(bufString[2], ":")
         if strings.Contains(bufString[2], "Accept-Encoding") && encoding[1] == " gzip\r" {
             echostring := strings.Split(path, "/")
-            response = "HTTP/1.1 200 OK\r\n"
-            response += fmt.Sprintf("Content-Encoding: %s\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n", encoding[1], len(echostring[2]))
-            response += echostring[2]
+            response = compressedResponseBuilder(OK, encoding[1], "text/plain", len(echostring[2]), echostring[2])
         } else {
             echostring := strings.Split(path, "/")
-            response = "HTTP/1.1 200 OK\r\n"
-            response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(echostring[2]))
-            response += echostring[2]
+            response = responseBuilder(OK, "text/plain", len(echostring[2]), echostring[2])
         }
     
     case path == "/user-agent":
         user_agent := bufString[2]
         user_agent_echo := strings.Split(user_agent, " ")
-        response = "HTTP/1.1 200 OK\r\n"
         // must subtract one becuase length also counts carriage return as character
-        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent_echo[1])-1)
-        response +=user_agent_echo[1]
+        response = responseBuilder(OK, "text/plain", len(user_agent_echo[1])-1), user_agent_echo[1])
 
     case method == "GET" && strings.Contains(path, "files"):
         directory := os.Args[2]
@@ -93,9 +87,7 @@ func handleConnection(conn net.Conn) {
                     response = NOT_FOUND 
 				} else {
                     dataString := string(data)
-					response = "HTTP/1.1 200 OK\r\n"
-                    response += fmt.Sprintf("Content-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n", len(dataString))
-                    response += dataString
+                    response = responseBuilder(OK, "application/octet-stream", len(dataString), dataString)
 				}
     
     case method == "POST" && strings.Contains(path, "files"):
@@ -127,4 +119,8 @@ func handleConnection(conn net.Conn) {
 
 func responseBuilder(statusLine string, contentType string, contentLength int, body string) string {
     return fmt.Sprintf("%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n%s", statusLine, contentType, contentLength, body)
+}
+
+func compressedResponseBuilder(contentEncoding string, statusLine string, contentType string, contentLength int, body string) string {
+    return fmt.Sprintf("%sContent-Encoding: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n%s", statusLine, contentEncoding, contentType, contentLength, body)
 }
