@@ -118,7 +118,7 @@ func handleConnection(conn net.Conn) {
         response = responseBuilder(CREATED, "application/octet-stream", len(bufString[len(bufString)-1]), bufString[len(bufString)-1])
 
     default:
-        response = "HTTP/1.1 404 Not Found\r\n\r\n"
+        response = NOT_FOUND
     }
 
     func responseBuilder(statusLine string, contentType string, contentLength int, body string) string {
