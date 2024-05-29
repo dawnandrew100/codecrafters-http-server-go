@@ -37,7 +37,7 @@ func handleConnection(conn net.Conn) {
     bufString := strings.Split(string(buf), "\n")
     fmt.Println(bufString[1]) 
     request := strings.Split(bufString[0], " ")
-    host := bufString[1]
+    //host := bufString[1]
     user_agent := bufString[2]
 
     fmt.Println(user_agent)
