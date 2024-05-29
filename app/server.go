@@ -50,7 +50,7 @@ func main() {
 
 func requestParser(buffer []byte) HttpRequest {
     // parse request buffer
-	bufString := strings.Split(string(req), "\r\n")
+	bufString := strings.Split(string(buffer), "\r\n")
 	
     method := strings.Split(bufString[0], " ")[0]
 	path := strings.Split(bufString[0], " ")[1]
@@ -60,7 +60,7 @@ func requestParser(buffer []byte) HttpRequest {
 		header := strings.Split(bufString[i], ": ")
 		headers[header[0]] = header[1]
 	}
-	body := strings.Split(string(req), "\r\n\r\n")[1]
+	body := strings.Split(string(buffer), "\r\n\r\n")[1]
 	
     return HttpRequest{
 		method:  method,
@@ -103,7 +103,7 @@ func handleConnection(conn net.Conn) {
         }
     
     case path == "/user-agent":
-        user_agent := req.req.headers["User-Agent"]
+        user_agent := req.headers["User-Agent"]
         user_agent_echo := strings.Split(user_agent, " ")
         // must subtract one becuase length also counts carriage return as character
         response = responseBuilder(OK, "text/plain", len(user_agent_echo[1])-1, user_agent_echo[1])
