@@ -53,9 +53,9 @@ func main() {
 	}
 
     return &Request{
-        Method: request[0],
-        Target: request[1],
-        HTTPVersion: request[2],
+        Method: clientrequest[0],
+        Target: clientrequest[1],
+        HTTPVersion: clientrequest[2],
         Headers: headers,
     }
  }
@@ -72,8 +72,6 @@ func handleConnection(conn net.Conn) {
 
     var response string
 
-    //host := bufString[1]
-    user_agent := bufString[2]
     switch {
     case request.Target == "/":
         response = "HTTP/1.1 200 OK\r\n\r\n"
