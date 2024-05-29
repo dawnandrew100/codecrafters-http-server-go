@@ -31,12 +31,12 @@ func handleConnection(conn net.Conn) {
     //frees memory by closing connection at end of function
     defer conn.Close()
     
-    fmt.Println("Making sure this part works, too")
     buf := make([]byte, 0, 1024)
     conn.Read(buf)
 
     bufString := strings.Split(string(buf), "\n")
 
+    fmt.Println("Making sure this part works, too")
     request := strings.Split(bufString[0], " ")
     // headers := strings.Split(bufString[1], " ")
 
