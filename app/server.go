@@ -38,6 +38,7 @@ func handleConnection(conn net.Conn) {
     conn.Read(buf)
 
     bufString := strings.Split(string(buf), "\n")
+    bufByte := []byte(bufString)
     request := strings.Split(bufString[0], " ")
     host := bufString[1]
 
@@ -88,14 +89,14 @@ func handleConnection(conn net.Conn) {
 	    if err != nil {
 		    fmt.Printf("Unable to create file: %s\n", filepath)
 	    }
-	    _, err = f.Write(bufString[len(buf)-1])
+	    _, err = f.Write(bufByte[len(bufString)-1])
 	    if err != nil {
 		    fmt.Println("Unable to write to file")
 	    }
 		response = "HTTP/1.1 201 Created\r\n"
-        response += fmt.Sprintf("Content-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n", len(dataString))
-        response += dataString
-	
+        response += fmt.Sprintf("Content-Type: application/octet-stream\r\nContent-Length: %d\r\n\r\n", len(bufString[len(bufString)-1]))
+        response += bufString[len(bufString)-1])
+
     default:
         response = "HTTP/1.1 404 Not Found\r\n\r\n"
     }
