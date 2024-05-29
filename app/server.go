@@ -85,7 +85,8 @@ func handleConnection(conn net.Conn) {
         filepath := fmt.Sprintf("%s%s", directory, fileName)
         data, err := os.ReadFile(directory + fileName)
 				if err != nil {
-                    response = "HTTP/1.1 404 Not Found here\r\n\r\n"
+                    fmt.Println(err.Error())
+                    os.Exit(1)
 				} else {
                     dataString := string(data)
 	                f, err := os.Create(filepath)
