@@ -39,7 +39,7 @@ func main() {
 
  func parseRequest(request []string) *Request {
     clientrequest := strings.Split(request[0], " ")
-    fmt.Println("Hello")	
+    
     headers := make(map[string]string)
 	for _, element := range request[1:] {
 		if strings.Contains(element, "\x00") {
@@ -52,6 +52,7 @@ func main() {
 		}
 	}
 
+    fmt.Println("Hello")	
     return &Request{
         Method: clientrequest[0],
         Target: clientrequest[1],
