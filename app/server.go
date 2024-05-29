@@ -121,6 +121,6 @@ func responseBuilder(statusLine string, contentType string, contentLength int, b
     return fmt.Sprintf("%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n%s", statusLine, contentType, contentLength, body)
 }
 
-func compressedResponseBuilder(contentEncoding string, statusLine string, contentType string, contentLength int, body string) string {
+func compressedResponseBuilder(statusLine string, contentEncoding string, contentType string, contentLength int, body string) string {
     return fmt.Sprintf("%sContent-Encoding: %s\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n%s", statusLine, contentEncoding, contentType, contentLength, body)
 }
