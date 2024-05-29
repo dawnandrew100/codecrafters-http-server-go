@@ -49,10 +49,6 @@ func handleConnection(conn net.Conn) {
     if path == "/" {
         response = "HTTP/1.1 200 OK\r\n\r\n"
     }
-    if strings.Contains(path, "echo") {
-        response = "HTTP/1.1 200 OK\r\n\r\n"
-        
-    }
 
     conn.Write([]byte(response))
 
