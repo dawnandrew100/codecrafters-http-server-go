@@ -41,7 +41,7 @@ func handleConnection(conn net.Conn) {
     // headers := strings.Split(bufString[1], " ")
 
     // method := request[0]
-    path := request[1]
+    path := string(request[1])
     // version := request[2]
     fmt.Printf("Path is %s:\n", path)
 
