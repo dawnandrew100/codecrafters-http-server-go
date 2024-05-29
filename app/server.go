@@ -61,7 +61,8 @@ func handleConnection(conn net.Conn) {
     if path == "/user-agent" {
         user_agent_echo := strings.Split(user_agent, " ")
         response = "HTTP/1.1 200 OK\r\n"
-        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent_echo[1]))
+        // must subtract one becuase length also counts carriage return as character
+        response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent_echo[1])-1)
         response +=user_agent_echo[1]
     }
 
