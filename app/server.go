@@ -115,7 +115,7 @@ func handleConnection(conn net.Conn) {
 	    if err != nil {
 		    fmt.Println("Unable to write to file")
 	    }
-        response = responseBuilder(CREATED, "application/octet-stream", len(bufString[len(bufString)-1]), bufString[len(bufString)-1])
+        response, err = responseBuilder(CREATED, "application/octet-stream", len(bufString[len(bufString)-1]), bufString[len(bufString)-1])
 
     default:
         response = NOT_FOUND
