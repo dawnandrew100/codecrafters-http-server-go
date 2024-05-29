@@ -6,6 +6,7 @@ import (
 	"os"
     "strings"
     "bytes"
+
 )
 // I'm going to refactor this because I can forsee this becoming complicated
 
@@ -39,6 +40,36 @@ func main() {
    }
  }
 
+ type HttpRequest struct {
+     method  string
+     path    string
+     version string
+     headers map[string]string
+     body    string
+ }
+
+func requestParser(buffer []byte) HttpRequest {
+    // parse request buffer
+	bufString := strings.Split(string(req), "\r\n")
+	
+    method := strings.Split(bufString[0], " ")[0]
+	path := strings.Split(bufString[0], " ")[1]
+	version := strings.Split(bufString[0], " ")[2]
+	headers := make(map[string]string)
+	for i := 1; i < len(bufString)-2; i++ {
+		header := strings.Split(bufString[i], ": ")
+		headers[header[0]] = header[1]
+	}
+	body := strings.Split(string(req), "\r\n\r\n")[1]
+	
+    return HttpRequest{
+		method:  method,
+		path:    path,
+        version: version,
+		headers: headers,
+		body:    body,
+	}
+}
 
 func handleConnection(conn net.Conn) {
     //frees memory by closing connection at end of function
@@ -48,14 +79,12 @@ func handleConnection(conn net.Conn) {
     conn.Read(buf)
     buf = bytes.Trim(buf, "\x00")
 
-    bufString := strings.Split(string(buf), "\n")
-    request := strings.Split(bufString[0], " ")
-    host := bufString[1]
+    req := requestParser(buf)
 
-    method := request[0]
-    path := request[1]
-    version := request[2]
-    fmt.Printf("Port: %s\nPath: %s\nHTTP version: %s\n", host, path, version)
+    method := req.method
+    path := req.path
+    
+    fmt.Printf("Port: %s\nPath: %s\nHTTP version: %s\n", headers["Host"], path, req.version)
 
     var response string
 
@@ -64,17 +93,17 @@ func handleConnection(conn net.Conn) {
         response = OK + "\r\n"
 
     case strings.Contains(path, "echo"):
-        encoding := strings.Split(bufString[2], ":")
-        if strings.Contains(bufString[2], "Accept-Encoding") && encoding[1] == " gzip\r" {
+        acceptedEncoding := headers["Accept-Encoding"]
+        if acceptedEncoding == "gzip" || acceptedEncoding == "brotli"{
             echostring := strings.Split(path, "/")
-            response = compressedResponseBuilder(OK, encoding[1], "text/plain", len(echostring[2]), echostring[2])
+            response = compressedResponseBuilder(OK, acceptedEncoding, "text/plain", len(echostring[2]), echostring[2])
         } else {
             echostring := strings.Split(path, "/")
             response = responseBuilder(OK, "text/plain", len(echostring[2]), echostring[2])
         }
     
     case path == "/user-agent":
-        user_agent := bufString[2]
+        user_agent := req.headers["User-Agent"]
         user_agent_echo := strings.Split(user_agent, " ")
         // must subtract one becuase length also counts carriage return as character
         response = responseBuilder(OK, "text/plain", len(user_agent_echo[1])-1, user_agent_echo[1])
@@ -103,11 +132,11 @@ func handleConnection(conn net.Conn) {
 	    if err != nil {
 		    fmt.Printf("Unable to create file: %s\n", filepath)
 	    }
-	    _, err = f.WriteString(bufString[len(bufString)-1])
+	    _, err = f.WriteString(req.body)
 	    if err != nil {
 		    fmt.Println("Unable to write to file")
 	    }
-        response = responseBuilder(CREATED, "application/octet-stream", len(bufString[len(bufString)-1]), bufString[len(bufString)-1])
+        response = responseBuilder(CREATED, "application/octet-stream", len(req.body), req.body)
 
     default:
         response = NOT_FOUND
