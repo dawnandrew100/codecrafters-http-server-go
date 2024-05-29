@@ -58,7 +58,7 @@ func handleConnection(conn net.Conn) {
     }
 
     if path == "/user-agent" {
-        user_agent := strings.Split(headers[2], " ")
+        user_agent := strings.Split(headers[1], " ")
         response = "HTTP/1.1 200 OK\r\n"
         response += fmt.Sprintf("Content-Type: text/plain\r\nContent-Length: %d\r\n\r\n", len(user_agent[1]))
         response +=user_agent[1]
