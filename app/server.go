@@ -6,7 +6,6 @@ import (
 	"os"
     "strings"
     "bytes"
-    "slices"
 )
 
 func main() {
@@ -56,7 +55,7 @@ func handleConnection(conn net.Conn) {
         response = "HTTP/1.1 200 OK\r\n\r\n"
 
     case strings.Contains(path, "echo"):
-        if slices.Contains(bufString[1:], "Accept-Encoding") {
+        if strings.Contains(bufString[2], "Accept-Encoding") {
             encoding := strings.Split(bufString[2], ":")
             echostring := strings.Split(path, "/")
             response = "HTTP/1.1 200 OK\r\n"
