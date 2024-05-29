@@ -24,7 +24,7 @@ func main() {
 	 	fmt.Println("Error accepting connection: ", err.Error())
 	 	os.Exit(1)
 	 }
-    handleConnection(conn)
+    go handleConnection(conn)
  }
 
 func handleConnection(conn net.Conn) {
@@ -43,7 +43,6 @@ func handleConnection(conn net.Conn) {
     path := request[1]
     // version := request[2]
     fmt.Printf("Path is %s:\n", path)
-    fmt.Printf("User-agent is %s:\n", user_agent)
 
     var response string = "HTTP/1.1 404 Not Found\r\n\r\n"
     if path == "/" {
