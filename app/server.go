@@ -39,7 +39,7 @@ func handleConnection(conn net.Conn) {
     request := strings.Split(bufString[0], " ")
     // headers := strings.Split(bufString[1], " ")
 
-    fmt.Printf("%s", request)
+    fmt.Println(request)
     fmt.Println("Is this right here working")
     // method := request[0]
     path := request[1]
