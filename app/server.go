@@ -35,7 +35,7 @@ func handleConnection(conn net.Conn) {
     conn.Read(buf)
 
     bufString := strings.Split(string(buf), "\n")
-
+    fmt.Pringln(bufString)
     request := strings.Split(bufString[0], " ")
     // headers := strings.Split(bufString[1], " ")
 
