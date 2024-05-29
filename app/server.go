@@ -84,7 +84,7 @@ func handleConnection(conn net.Conn) {
     method := req.method
     path := req.path
     
-    fmt.Printf("Port: %s\nPath: %s\nHTTP version: %s\n", headers["Host"], path, req.version)
+    fmt.Printf("Port: %s\nPath: %s\nHTTP version: %s\n", req.headers["Host"], path, req.version)
 
     var response string
 
@@ -93,7 +93,7 @@ func handleConnection(conn net.Conn) {
         response = OK + "\r\n"
 
     case strings.Contains(path, "echo"):
-        acceptedEncoding := headers["Accept-Encoding"]
+        acceptedEncoding := req.headers["Accept-Encoding"]
         if acceptedEncoding == "gzip" || acceptedEncoding == "brotli"{
             echostring := strings.Split(path, "/")
             response = compressedResponseBuilder(OK, acceptedEncoding, "text/plain", len(echostring[2]), echostring[2])
@@ -103,7 +103,7 @@ func handleConnection(conn net.Conn) {
         }
     
     case path == "/user-agent":
-        user_agent := req.headers["User-Agent"]
+        user_agent := req.req.headers["User-Agent"]
         user_agent_echo := strings.Split(user_agent, " ")
         // must subtract one becuase length also counts carriage return as character
         response = responseBuilder(OK, "text/plain", len(user_agent_echo[1])-1, user_agent_echo[1])
