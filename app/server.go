@@ -36,10 +36,10 @@ func handleConnection(conn net.Conn) {
 
     bufString := strings.Split(string(buf), "\n")
 
-    fmt.Println("Making sure this part works, too")
     request := strings.Split(bufString[0], " ")
     // headers := strings.Split(bufString[1], " ")
 
+    fmt.Println("Making sure this part works, too")
     // method := request[0]
     path := request[1]
     // version := request[2]
