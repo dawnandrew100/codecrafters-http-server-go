@@ -42,6 +42,7 @@ func main() {
     
     headers := make(map[string]string)
 	for _, element := range request[1:] {
+        fmt.Println("Bye")
 		if strings.Contains(element, "\x00") {
 			break
 		}
