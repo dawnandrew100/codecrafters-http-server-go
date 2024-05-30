@@ -96,10 +96,10 @@ func handleConnection(conn net.Conn) {
         acceptedEncoding := req.headers["Accept-Encoding"]
         if acceptedEncoding == "gzip" || acceptedEncoding == "brotli"{
             echostring := strings.Split(path, "/")
-            response = compressedResponseBuilder(OK, acceptedEncoding, "text/plain", len(echostring[2]), echostring[2])
+            response = compressedResponseBuilder(OK, acceptedEncoding, "text/plain", len(req.headers["Accept-Encoding"]), req.headers["Accept-Encoding"])
         } else {
             echostring := strings.Split(path, "/")
-            response = responseBuilder(OK, "text/plain", len(echostring[2]), echostring[2])
+            response = responseBuilder(OK, "text/plain", len(req.headers["Accept-Encoding"]), req.headers["Accept-Encoding"])
         }
     
     case path == "/user-agent":
