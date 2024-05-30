@@ -93,7 +93,7 @@ func handleConnection(conn net.Conn) {
 
     case strings.Contains(path, "echo"):
         encoding := req.headers["Accept-Encoding"]
-        if strings.Contains("gzip") || encoding == "gzip"{
+        if strings.Contains(encoding, "gzip") || encoding == "gzip"{
             echostring := strings.Split(path, "/")
             response = compressedResponseBuilder(OK, encoding, "text/plain", len(echostring[2]), echostring[2])
         } else {
