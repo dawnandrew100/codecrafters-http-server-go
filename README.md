@@ -1,5 +1,7 @@
 [![progress-banner](https://backend.codecrafters.io/progress/http-server/020cc44e-dfb9-40d0-8daa-1b9c55fde346)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
 
+# Message from Code Crafters
+
 This is a starting point for Go solutions to the
 ["Build Your Own HTTP server" Challenge](https://app.codecrafters.io/courses/http-server/overview).
 
@@ -14,25 +16,11 @@ and more.
 **Note**: If you're viewing this repo on GitHub, head over to
 [codecrafters.io](https://codecrafters.io) to try the challenge.
 
-# Passing the first stage
+# My goals with the project 
 
-The entry point for your HTTP server implementation is in `app/server.go`. Study
-and uncomment the relevant code, and push your changes to pass the first stage:
+Go is a relatively new langauge for me, so I intend to complete this challenge (and the extension) to bolster my skills in the language!
+An HTTP server is a good chance to learn not only basic syntax but unique ways of parsing and best practices when it comes to programming in go!
 
-```sh
-git add .
-git commit -m "pass 1st stage" # any msg
-git push origin master
-```
+The hope is that by the end of the free challenge window (May 31st, 2024), I'll have a fully fledged Go server with compression!
 
-Time to move on to the next stage!
-
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
-
-1. Ensure you have `go (1.19)` installed locally
-1. Run `./your_server.sh` to run your program, which is implemented in
-   `app/server.go`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+As of today (May 29th, 2024), the server has been created through the base challenge and the gzip header can be read!
