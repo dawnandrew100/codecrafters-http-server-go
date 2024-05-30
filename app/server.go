@@ -8,7 +8,6 @@ import (
     "bytes"
 
 )
-// I'm going to refactor this because I can forsee this becoming complicated
 
 const (
     OK          = "HTTP/1.1 200 OK\r\n"
@@ -93,10 +92,10 @@ func handleConnection(conn net.Conn) {
         response = OK + "\r\n"
 
     case strings.Contains(path, "echo"):
-        acceptedEncoding := req.headers["Accept-Encoding"]
-        if acceptedEncoding == "gzip" || acceptedEncoding == "brotli"{
+        encoding := req.headers["Accept-Encoding"]
+        if strings.Contains("gzip") || encoding == "gzip"{
             echostring := strings.Split(path, "/")
-            response = compressedResponseBuilder(OK, acceptedEncoding, "text/plain", len(echostring[2]), echostring[2])
+            response = compressedResponseBuilder(OK, encoding, "text/plain", len(echostring[2]), echostring[2])
         } else {
             echostring := strings.Split(path, "/")
             response = responseBuilder(OK, "text/plain", len(echostring[2]), echostring[2])
