@@ -6,7 +6,7 @@ import (
 	"os"
     "strings"
     "bytes"
-
+    "compress/gzip"
 )
 
 const (
@@ -95,7 +95,12 @@ func handleConnection(conn net.Conn) {
         encoding := req.headers["Accept-Encoding"]
         if strings.Contains(encoding, "gzip") || encoding == "gzip"{
             echostring := strings.Split(path, "/")
-            response = compressedResponseBuilder(OK, "gzip", "text/plain", len(echostring[2]), echostring[2])
+            gzipBuffer := new(bytes.Buffer)
+            gzipWriter := gzip.NewWriter(gzipBuffer)
+            gzipWriter.Write([]byte(echostring[2]))
+            gzipWriter.Close()
+            gzipString := gzipBuffer.String()
+            response = compressedResponseBuilder(OK, "gzip", "text/plain", len(gzipString), gzipString)
         } else {
             echostring := strings.Split(path, "/")
             response = responseBuilder(OK, "text/plain", len(echostring[2]), echostring[2])
