@@ -104,9 +104,7 @@ func handleConnection(conn net.Conn) {
     
     case path == "/user-agent":
         user_agent := req.headers["User-Agent"]
-        user_agent_echo := strings.Split(user_agent, " ")
-        // must subtract one becuase length also counts carriage return as character
-        response = responseBuilder(OK, "text/plain", len(user_agent_echo[1])-1, user_agent_echo[1])
+        response = responseBuilder(OK, "text/plain", len(user_agent), user_agent)
 
     case method == "GET" && strings.Contains(path, "files"):
         directory := os.Args[2]
