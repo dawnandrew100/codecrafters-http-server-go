@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"net"
-    "os"
-    "strings"
-    "bytes"
-    "compress/gzip"
+        "fmt"
+        "net"
+        "os"
+        "strings"
+        "bytes"
+        "compress/gzip"
 )
 
 const (
